@@ -225,6 +225,7 @@ The interface was designed in Figma Make first, and the app was then built to th
 
 - **Figma Make design:** https://www.figma.com/make/cgRfeOzVsBuuJHSI8U6gdJ/PortShift-Logistics-Dashboard
 - **Figma file with the screens as named frames, iterations first:** https://www.figma.com/design/54jCELYjFeJPS78UUfOOv1
+  (the second row, "Final 01" to "Final 12", is the app as submitted)
 - **Figma MCP server** (`.mcp.json`): used to read the design into the build. The CSS variables in
   `app/static/app.css` are where the design's colours and type are applied.
 - **Kept from the Figma design:** the wordmark, the view title and risk legend on the map, floating panels, the
