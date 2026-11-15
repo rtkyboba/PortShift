@@ -92,6 +92,12 @@ embedding endpoint, with `DATABRICKS_HOST` and `DATABRICKS_TOKEN`) or `OLLAMA_EM
 `ollama pull nomic-embed-text`); with neither, retrieval is BM25 alone. Vectors are kept in memory; there is no vector
 store. With no chat model configured the closest records are the answer.
 `understand.py` puts typing slips, shorthand and loose shipment numbers right before anything reads a message.
+Several shipments at once: type them in Ask PortShifter with their cargo and dates ("London warehouse to Southampton
+port, 20 pallets, arriving by Monday 17:00; Leeds depot to Hamburg via Immingham, 12 pallets, no deadline"). When every
+shipment is complete the approval panel opens straight away: a route is already chosen for each in code (the cheapest
+that meets its date and the risk limit), each plan opens on the map with its stops, times, cost and risk, a plan that
+cannot meet its date is flagged with the reason and left unticked, and one "Approve all" saves the rest to Planned
+shipments. Deep link: `?bot=<message>&view=NEW-2`.
 Live check: `live.py`, `POST /api/check` runs the agent's monitor on one corridor (needs `LINKUP_API_KEY` and a
 model; says so when they are missing). Without Databricks the events land in `.portshift_live/`
 (`PORTSHIFT_LIVE_DIR`), are laid over the demo fleet, and the risk job is re-run so levels change.

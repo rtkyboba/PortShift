@@ -60,7 +60,24 @@ tracks.
 5. **Proposes.** Wait it out, reschedule or reroute, each with a new arrival time and an estimated cost. Nothing is
    booked.
 6. **Answers.** PortShifter, the chat assistant, answers questions about shipments, disruptions, costs and stock
-   from the database, and plans new shipments from a sentence.
+   from the database.
+7. **Schedules from plain text.** Type several new shipments in one message, with cargo and when each must arrive.
+   PortShift plans them all and you approve them with one click.
+
+**Scheduling many shipments at once.** For example:
+
+> plan these new shipments: London warehouse to Southampton port, 20 pallets, arriving by Monday 17:00; Brussels
+> warehouse to London warehouse and end at Glasgow, 4 reefers, arriving by today 15:00; Leeds depot to Hamburg via
+> Immingham, 12 pallets, no deadline
+
+- If a shipment is missing its cargo or timing, the chat asks for it.
+- A route is chosen for each shipment in code: the cheapest that meets its arrive-by date and the risk limit.
+- One summary shows the shipments planned, the total estimated cost and how many meet their date.
+- Click any plan to view it before approving: its route on the map with numbered stops, and its times, cost per
+  leg and risk.
+- "Approve all" saves every ticked plan to Planned shipments. A plan that cannot meet its date is flagged "Cannot
+  meet the deadline", with the reason, and starts unticked.
+- No model picks a route or a figure, costs are estimates, and nothing is saved before the click or booked after it.
 
 <table>
 <tr>
@@ -151,7 +168,8 @@ flowchart TD
 2. **Scope.** A fixed check, with no model, decides whether the message is about the operator's logistics. An
    off-topic message gets one sentence and costs nothing (`app/assistant.py`).
 3. **Route.** `app/router.py` reads the message into a structured request. Fixed patterns decide what the message
-   is. When it describes new shipments, the fine-tuned request reader splits it into shipments and stops.
+   is. When it describes new shipments, the fine-tuned request reader splits it into shipments and stops. Several
+   shipments typed at once are planned together and approved with one click (`app/newplan.py`).
 4. **Exact answers.** Counts, where a shipment is, what a disruption hits and the cost to wait are computed from
    the tables in code.
 5. **Retrieve.** `app/retrieve.py` turns every table into small records and ranks them for the question two ways:

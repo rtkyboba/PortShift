@@ -857,3 +857,11 @@ svg.place-icon.customer.on { outline: 2px solid var(--accent); outline-offset: 1
 .leaflet-tooltip.bare-tip::before { display: none; }
 .workspace.optimising .map-key .legend-body { display: none; } /* room for the options on the map; the key reopens when you leave Options */
 .workspace.optimising .map-key .legend-show { display: inline; }
+
+/* Several new shipments planned at once: a summary, and each plan opens on the map */
+.proposal .pall { padding: 9px 16px; border-bottom: 1px solid var(--border); background: var(--soft); font-size: 12.5px; }
+.prow.viewing { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+.prow .planref { font-size: 13.5px; text-align: left; }
+.prow .psum { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 12px; margin: 3px 0; font-size: 12.5px; color: var(--muted); }
+.prow .psum span:first-child { color: var(--text); font-weight: 600; }
+.prow .pjourney { margin: 6px 0 4px; }

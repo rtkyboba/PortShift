@@ -1199,3 +1199,30 @@ def test_embeddings_fall_back_to_the_second_provider_when_the_first_refuses(monk
     assert embeddings.provider() == "ollama"  # the one that refused is skipped for a minute
     embeddings.embed(["c"])
     assert calls == ["databricks", "ollama", "ollama"]
+
+
+# ---- several shipments typed at once: a route chosen for each, late ones flagged ----
+
+MANY = ("plan these new shipments: london warehouse to southampton port, 20 pallets, arriving by Monday 17:00; "
+        "brussels warehouse to london warehouse and end at glasgow, 4 reefers, arriving by today 15:00; "
+        "leeds depot to hamburg via immingham, 12 pallets, no deadline")
+
+
+def test_several_shipments_typed_at_once_each_get_a_chosen_route_and_late_ones_are_marked():
+    read = client.post("/api/route", json={"message": MANY}).json()["request"]
+    assert read["intent"] == "plan_new_shipments" and len(read["shipments"]) == 3
+    out = client.post("/api/plan-new", json={"message": MANY}).json()
+    assert out["complete"] and out["planned"] == 3 and not out["needs"]
+    a, b, c = out["shipments"]
+    pick = lambda s: next(r for r in s["routes"] if r["id"] == s["recommended_id"])
+    for s in (a, b, c):  # everything the panel shows for a plan is on the chosen route
+        r = pick(s)
+        assert r["depart_at"] and r["eta"] and r["risk"]["level"] in (1, 2, 3, 4, 5) and r["cost"] == round(sum(l["amount"] for leg in r["legs"] for l in leg["cost_lines"]), 2)
+        assert all(l["planned_start"] and l["planned_end"] and l["from_name"] and l["to_name"] for l in r["legs"])
+    assert pick(a)["slack_hours"] >= 0 and pick(a)["late"] is None and a["cannot_meet_deadline"] is None  # meets Monday 17:00
+    # three hours from now: every route would have had to leave already, so the plan is marked late with the reason,
+    # and the suggestion is one that can physically be driven (not a truck across the Channel)
+    assert all(r["late"] and r["late"].startswith("Too late") for r in b["routes"]) and b["cannot_meet_deadline"].startswith("Too late")
+    assert all(not [t for t in r["problems"] if not t.startswith("Too late")] for r in b["routes"]) and pick(b)["id"] != "drawn"
+    assert pick(c).get("slack_hours") is None and c["cannot_meet_deadline"] is None  # no deadline
+    assert client.get("/api/planned").json() == [] or all(p.get("label") != a["label"] for p in client.get("/api/planned").json())  # nothing saved by planning

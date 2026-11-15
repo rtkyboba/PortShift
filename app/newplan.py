@@ -227,8 +227,18 @@ def plan(text: str, preferences: dict | None = None, own_places: list[dict] | No
             arrive = when["at"] if when["kind"] == "arrive_by" else None
             res = planner.suggest(item["stops"], ["truck"] * (len(item["stops"]) - 1), when["at"] if when["kind"] == "depart_at" else None,
                                   preferences, own_places, cargo, arrive, "arrive" if arrive else "depart")
-            row["routes"] = [r for r in res["routes"] if not r["problems"]] or res["routes"]
-            row["recommended_id"] = res["recommended_id"] if any(r["id"] == res["recommended_id"] for r in row["routes"]) else row["routes"][0]["id"]
+            for r in res["routes"]:  # why a route cannot meet the arrive-by date, if it cannot
+                r["late"] = next((t for t in r["problems"] if t.startswith("Too late")), None) or next((v for v in r["violations"] if "arrive-by" in v), None)
+            possible = [r for r in res["routes"] if not [t for t in r["problems"] if not t.startswith("Too late")]]  # can physically be done
+            on_time = [r for r in possible if not r["late"]]
+            row["routes"] = [r for r in res["routes"] if not r["problems"]] or possible or res["routes"]
+            if on_time and any(r["id"] == res["recommended_id"] for r in on_time):
+                row["recommended_id"] = res["recommended_id"]
+            elif on_time:
+                row["recommended_id"] = min(on_time, key=lambda r: (not r["within_limits"], r["cost"]))["id"]
+            else:  # nothing makes the date: suggest the cheapest that can be done, and say it is late
+                row["recommended_id"] = min(row["routes"], key=lambda r: r["cost"])["id"]
+            row["cannot_meet_deadline"] = next(r for r in row["routes"] if r["id"] == row["recommended_id"])["late"]
             row["depart_at"] = res["depart_at"]
             row["same_lane"] = _same_lane(item["stops"], ships)
             n_routes += len(row["routes"])

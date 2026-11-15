@@ -978,26 +978,33 @@ async function newShipments(message, shipments = [], details = []) { // shipment
         ["Cancel", "Stop planning these shipments", () => botAsk("cancel")]]) : chipRow([["Cancel", "Stop planning these shipments", () => botAsk("cancel")]]));
   }
   pendingDetails = null;
-  botSay(`${details.length ? "Thanks, that is everything. " : ""}I have ${d.shipments.length} new shipment${d.shipments.length === 1 ? "" : "s"} with cargo and timing. Here is a first plan for each:`, understood,
-    ready.length ? el("span", {}, "Do you want me to plan these in full? I will lay out every route for each shipment with its cost worked out and its risk against today's disruptions, and bring you the plans to approve. Nothing is created until you approve.") : "",
-    ready.length ? el("span", {className: "yesno"}, el("button", {className: "btn small primary", onclick: () => { botYou("Yes, plan them"); startNewPlan(d); }}, "Yes, plan them"),
-      el("button", {className: "btn small", onclick: () => { if (pendingNew === d) pendingNew = null; botYou("Not now"); botSay("No problem. Nothing was created. The button above still works if you change your mind."); }}, "Not now")) : "");
-  pendingNew = ready.length ? d : null;
+  // Every shipment has its stops, cargo and timing: plan them all and open the one panel to review and approve.
+  botSay(`${details.length ? "Thanks, that is everything. " : ""}I have ${d.shipments.length} new shipment${d.shipments.length === 1 ? "" : "s"} with cargo and timing:`, understood,
+    ready.length ? el("span", {}, `I have picked a route for ${ready.length === 1 ? "it" : "each"} (the cheapest that meets its date and your risk limit) and opened the plan${ready.length === 1 ? "" : "s"} for you. Open any one to see it on the map, then approve them all with one click. Nothing is saved until you do.`) : "",
+    ready.length ? el("span", {className: "yesno"}, el("button", {className: "btn small", onclick: () => startNewPlan(d)}, "Open the plans again")) : "");
+  pendingNew = null;
+  if (ready.length) startNewPlan(d);
 }
 function startNewPlan(d) {
   pendingNew = null;
   if (!d) return;
   const ok = d.shipments.filter(x => !x.problem && !x.missing.length);
+  const late = x => !!x.routes.find(y => y.id === x.recommended_id)?.late;
   if (selected) deselect();
-  proposal = {kind: "new", request: d.request, data: d, picked: new Set(ok.map(x => x.ref)), route: Object.fromEntries(ok.map(x => [x.ref, x.recommended_id])), shown: 0, state: "working", error: null};
-  botSay("Planning them now. Watch the panel: I list each step, then the plans. Tick the ones you want and approve.");
+  // Every plan is ticked except one that cannot meet its arrive-by date: "Approve all" never saves a late plan unasked.
+  proposal = {kind: "new", request: d.request, data: d, picked: new Set(ok.filter(x => !late(x)).map(x => x.ref)), route: Object.fromEntries(ok.map(x => [x.ref, x.recommended_id])),
+    focus: null, shown: 0, state: "working", error: null};
   stepThrough(d);
 }
 function stepThrough(d) { // show the work step by step, then the proposal
   renderProposal();
   const tick = setInterval(() => {
     if (!proposal || proposal.data !== d) return clearInterval(tick);
-    if (++proposal.shown >= d.steps.length) { clearInterval(tick); proposal.state = "review"; draw(); }
+    if (++proposal.shown >= d.steps.length) { clearInterval(tick); proposal.state = "review";
+      const want = new URLSearchParams(location.search).get("view"); // ?view=NEW-2 opens that plan on the map
+      const x = want && proposal.kind === "new" && d.shipments.find(y => y.ref === want && y.routes.length);
+      if (x) { proposal.focus = x.ref; fit(x.routes.find(y => y.id === proposal.route[x.ref]).legs.flatMap(l => l.geometry), 8); }
+      draw(); }
     renderProposal();
   }, 380);
 }
@@ -1010,8 +1017,15 @@ function drawPlanned() { // approved plans (grey, dashed) and the plans being re
       .bindTooltip(esc(label), {permanent: true, direction: "top", offset: [0, -6], className: "stop-label"}).addTo(shipLayer);
   };
   planned.forEach(x => line(x.legs, css("--muted"), `${x.plan_id} planned`, false));
-  if (proposal?.kind === "new" && proposal.state !== "working" && proposal.state !== "done") proposal.data.shipments.filter(x => proposal.picked.has(x.ref)).forEach(x => {
-    const r = x.routes.find(y => y.id === proposal.route[x.ref]); if (r) line(r.legs, css("--accent"), x.ref, true); });
+  if (proposal?.kind === "new" && proposal.state !== "working" && proposal.state !== "done") proposal.data.shipments.forEach(x => {
+    const r = x.routes.find(y => y.id === proposal.route[x.ref]); if (!r) return;
+    if (proposal.focus !== x.ref) { if (proposal.picked.has(x.ref)) line(r.legs, css("--accent"), x.ref, !proposal.focus); return; }
+    const c = COLORS[r.risk.level || 0]; // the plan being viewed: its whole route in its risk colour, every stop numbered
+    r.legs.forEach(l => { L.polyline(l.geometry, {color: c, weight: 10, opacity: 0.18, interactive: false}).addTo(shipLayer);
+      L.polyline(l.geometry, {color: c, weight: 4, dashArray: l.mode === "ship" ? "8 7" : l.mode === "plane" ? "2 8" : null, lineCap: "round", interactive: false}).addTo(shipLayer); });
+    [[r.legs[0].from_name, r.legs[0].from_lat, r.legs[0].from_lon], ...r.legs.map(l => [l.to_name, l.to_lat, l.to_lon])].forEach(([n, la, lo], i) =>
+      L.circleMarker([la, lo], {radius: 5.5, color: css("--surface"), weight: 2, fillColor: c, fillOpacity: 1, interactive: false})
+        .bindTooltip(`${i + 1}. ${esc(n)}`, {permanent: true, direction: "top", offset: [0, -7], className: "stop-label"}).addTo(shipLayer)); });
 }
 
 // ---- market rates: what freight rates are being reported at, each line with its source ----
@@ -2011,12 +2025,28 @@ function renderNewProposal(host, p, close) {
   if (working) return host.replaceChildren(head, stepList(d.steps, p.shown + 1, true));
   const chosen = d.shipments.filter(x => p.picked.has(x.ref)), routeOf = x => x.routes.find(y => y.id === p.route[x.ref]);
   const total = chosen.reduce((t, x) => t + routeOf(x).cost, 0), locked = p.state !== "review";
+  const plans = d.shipments.filter(x => !x.problem), isLate = x => !!routeOf(x)?.late;
+  const dated = plans.filter(x => routeOf(x)?.slack_hours != null), onTime = dated.filter(x => !isLate(x)).length;
+  const view = x => { p.focus = p.focus === x.ref ? null : x.ref; renderProposal(); draw(); const r = routeOf(x);  // open a plan: its route on the map, its stops and times
+    if (p.focus && r) fit(r.legs.flatMap(l => l.geometry), 8); };
   const row = x => { const r = routeOf(x);
     if (x.problem) return el("div", {className: "prow needs_your_call"}, el("span", {}), el("div", {className: "pmain"}, el("div", {className: "pt"}, el("b", {}, x.ref), el("span", {className: "note"}, x.text)), el("div", {className: "out"}, x.problem)), el("span", {}));
-    return el("div", {className: "prow"},
+    const open = p.focus === x.ref, lvl0 = r.risk.level || 0;
+    return el("div", {className: "prow" + (open ? " viewing" : "") + (isLate(x) ? " needs_your_call" : "")},
       el("input", {type: "checkbox", checked: p.picked.has(x.ref), disabled: locked, ariaLabel: `Include ${x.ref}`, onchange: e => { e.target.checked ? p.picked.add(x.ref) : p.picked.delete(x.ref); renderProposal(); draw(); }}),
       el("div", {className: "pmain"},
-        el("div", {className: "pt"}, el("b", {}, x.ref), el("span", {}, x.label), p.state === "done" && p.picked.has(x.ref) ? el("span", {className: "badge badge-rec"}, "Recorded") : ""),
+        el("div", {className: "pt"}, el("button", {className: "textbtn planref", ariaExpanded: String(open), title: "See this plan on the map, with its stops and times", onclick: () => view(x)}, `${x.ref} · ${x.label}`),
+          isLate(x) ? el("span", {className: "badge badge-out"}, "Cannot meet the deadline") : "",
+          p.state === "done" && p.picked.has(x.ref) ? el("span", {className: "badge badge-rec"}, "Recorded") : ""),
+        el("div", {className: "psum"}, el("span", {}, r.label), el("span", {}, `leaves ${dt(r.depart_at)}`), el("span", {}, `arrives ${dt(r.eta)}`),
+          el("span", {}, el("span", {className: "dot", style: `background:${COLORS[lvl0]}`}), ` ${lvl0} ${NAMES[lvl0]}`),
+          el("button", {className: "textbtn", onclick: () => view(x)}, open ? "Hide" : "View on map →")),
+        isLate(x) ? el("div", {className: "out"}, `${r.late} Left unticked: tick it to save it anyway, or pick a later date.`) : "",
+        open ? el("ol", {className: "journey pjourney"},
+          el("li", {}, el("b", {}, r.legs[0].from_name), el("span", {className: "time"}, `Leaves ${dt(r.legs[0].planned_start)}`)),
+          ...r.legs.map((l, i) => el("li", {className: [l.event_ids?.length ? "disrupted" : "", i === r.legs.length - 1 ? "end" : ""].join(" ").trim()}, el("b", {}, l.to_name),
+            el("span", {className: "time"}, `${i === r.legs.length - 1 ? "Arrives" : "ETA"} ${dt(l.planned_end)} · by ${l.mode}, ${Math.round(l.km).toLocaleString()} km, ${durText(l.hours)} · ${money(l.cost, cur)}`),
+            l.event_ids?.length ? el("span", {className: "flag"}, `Disruption on this leg: ${l.event_ids.map(id => events.find(v => v.event_id === id)?.location || id).join(", ")}`) : ""))) : "",
         el("div", {className: "note"}, `${cargoText(x.cargo)} · ${whenText(x.when)} · this route leaves ${dt(r.depart_at)}`
           + (r.slack_hours != null ? (r.slack_hours >= 0 ? ` and arrives ${durText(r.slack_hours)} before the deadline` : ` and arrives ${durText(-r.slack_hours)} after the deadline`) : "")),
         el("div", {className: "proutes", role: "radiogroup", ariaLabel: `Route for ${x.ref}`}, x.routes.map(y => { const lvl = y.risk.level || 0;
@@ -2032,15 +2062,18 @@ function renderNewProposal(host, p, close) {
       el("b", {className: "pcost"}, money(r.cost, cur))); };
   host.replaceChildren(head,
     el("details", {className: "pwork"}, el("summary", {}, `What PortShifter did: ${d.steps.length} steps, ${d.shipments.reduce((t, x) => t + x.routes.length, 0)} routes priced and scored`), stepList(d.steps, d.steps.length)),
+    el("div", {className: "pall"}, el("b", {}, `${plans.length} shipment${plans.length === 1 ? "" : "s"} planned`), ` · ${money(plans.reduce((t, x) => t + routeOf(x).cost, 0), cur)} in all (estimate)`,
+      dated.length ? ` · ${onTime} of ${dated.length} meet their arrive-by date` : "", el("span", {className: "note"}, " · open a plan to see it on the map")),
     el("div", {className: "prows"}, d.shipments.map(row)),
     p.log?.length ? el("div", {className: "plog"}, el("div", {className: "eyebrow"}, p.state === "done" ? "What PortShifter did after you approved" : "PortShifter is working"), stepList(p.log, p.log.length)) : "",
     el("div", {className: "pfoot"},
       p.state === "done" ? el("div", {className: "submitted", style: "margin:0;flex:1"}, el("b", {}, `Recorded ${p.approved} planned shipment${p.approved === 1 ? "" : "s"}`), "Tentative: nothing is booked and no carrier has been contacted. ",
           el("button", {className: "textbtn", onclick: () => { close(); $("tab-pln").click(); }}, "Open Planned shipments →"))
-        : el("div", {style: "flex:1"}, el("b", {}, `${chosen.length} shipment${chosen.length === 1 ? "" : "s"} selected · ${money(total, cur)}`), el("div", {className: "note"}, "Pick a route for each, untick any you do not want, then approve.")),
+        : el("div", {style: "flex:1"}, el("b", {}, `${chosen.length} of ${plans.length} selected · ${money(total, cur)}`),
+            el("div", {className: "note"}, plans.some(isLate) ? "A plan that cannot meet its date is left unticked: tick it to include it anyway." : "Untick any you do not want. One click saves the rest.")),
       p.state === "done" ? el("button", {className: "btn small", onclick: close}, "Close")
         : [el("button", {className: "btn small", disabled: locked, onclick: close}, "Dismiss"),
-           el("button", {className: "btn small primary", disabled: locked || !chosen.length, onclick: approveProposal}, p.state === "approving" ? "Recording…" : `Approve ${chosen.length} plan${chosen.length === 1 ? "" : "s"}`)]),
+           el("button", {className: "btn small primary", disabled: locked || !chosen.length, onclick: approveProposal}, p.state === "approving" ? "Recording…" : chosen.length === plans.length ? `Approve all ${chosen.length}` : `Approve ${chosen.length} of ${plans.length}`)]),
     el("p", {className: "note pnote"}, d.note));
 }
 function renderProposal() {
