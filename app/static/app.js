@@ -145,7 +145,10 @@ const END_DOTS_FROM = 6, endLayer = L.layerGroup();
 const toggleEndDots = () => map.getZoom() >= END_DOTS_FROM ? endLayer.addTo(map) : endLayer.remove();
 map.on("zoomend", toggleEndDots); toggleEndDots();
 // Keep whatever is fitted clear of the floating left panel.
-const fit = (bounds, maxZoom = 8) => { map.invalidateSize(); map.fitBounds(bounds, {paddingTopLeft: [430, 90], paddingBottomRight: [70, 90], maxZoom}); };
+const fit = (bounds, maxZoom = 8) => { map.invalidateSize();
+  const panel = document.getElementById("proposal"); // an approval panel on the right covers the map: keep what is fitted clear of it too
+  const right = panel && !panel.hidden ? Math.round(panel.getBoundingClientRect().width) + 44 : 70;
+  map.fitBounds(bounds, {paddingTopLeft: [430, 90], paddingBottomRight: [right, 90], maxZoom}); };
 
 let ships = [], events = [], summary = null, decisions = [], rates = null;
 let selected = null, detail = null, ptab = "details", focusEvent = null, hoverId = null, view = "map";
@@ -2038,17 +2041,18 @@ function renderNewProposal(host, p, close) {
         el("div", {className: "pt"}, el("button", {className: "textbtn planref", ariaExpanded: String(open), title: "See this plan on the map, with its stops and times", onclick: () => view(x)}, `${x.ref} · ${x.label}`),
           isLate(x) ? el("span", {className: "badge badge-out"}, "Cannot meet the deadline") : "",
           p.state === "done" && p.picked.has(x.ref) ? el("span", {className: "badge badge-rec"}, "Recorded") : ""),
-        el("div", {className: "psum"}, el("span", {}, r.label), el("span", {}, `leaves ${dt(r.depart_at)}`), el("span", {}, `arrives ${dt(r.eta)}`),
+        el("div", {className: "psum"}, el("span", {}, r.label),
+          ...(isLate(x) ? [el("span", {className: "out"}, `would have had to leave ${dt(r.depart_at)}`)] : [el("span", {}, `leaves ${dt(r.depart_at)}`), el("span", {}, `arrives ${dt(r.eta)}`)]),
           el("span", {}, el("span", {className: "dot", style: `background:${COLORS[lvl0]}`}), ` ${lvl0} ${NAMES[lvl0]}`),
           el("button", {className: "textbtn", onclick: () => view(x)}, open ? "Hide" : "View on map →")),
-        isLate(x) ? el("div", {className: "out"}, `${r.late} Left unticked: tick it to save it anyway, or pick a later date.`) : "",
+        isLate(x) ? el("div", {className: "out"}, `${r.late} That is already past, so the times below are what it would have taken, not a plan. Left unticked: tick it to save it anyway, or give a later date.`) : "",
         open ? el("ol", {className: "journey pjourney"},
           el("li", {}, el("b", {}, r.legs[0].from_name), el("span", {className: "time"}, `Leaves ${dt(r.legs[0].planned_start)}`)),
           ...r.legs.map((l, i) => el("li", {className: [l.event_ids?.length ? "disrupted" : "", i === r.legs.length - 1 ? "end" : ""].join(" ").trim()}, el("b", {}, l.to_name),
             el("span", {className: "time"}, `${i === r.legs.length - 1 ? "Arrives" : "ETA"} ${dt(l.planned_end)} · by ${l.mode}, ${Math.round(l.km).toLocaleString()} km, ${durText(l.hours)} · ${money(l.cost, cur)}`),
             l.event_ids?.length ? el("span", {className: "flag"}, `Disruption on this leg: ${l.event_ids.map(id => events.find(v => v.event_id === id)?.location || id).join(", ")}`) : ""))) : "",
-        el("div", {className: "note"}, `${cargoText(x.cargo)} · ${whenText(x.when)} · this route leaves ${dt(r.depart_at)}`
-          + (r.slack_hours != null ? (r.slack_hours >= 0 ? ` and arrives ${durText(r.slack_hours)} before the deadline` : ` and arrives ${durText(-r.slack_hours)} after the deadline`) : "")),
+        el("div", {className: "note"}, `${cargoText(x.cargo)} · ${whenText(x.when)}` + (isLate(x) ? "" : ` · this route leaves ${dt(r.depart_at)}`
+          + (r.slack_hours != null ? (r.slack_hours >= 0 ? ` and arrives ${durText(r.slack_hours)} before the deadline` : ` and arrives ${durText(-r.slack_hours)} after the deadline`) : ""))),
         el("div", {className: "proutes", role: "radiogroup", ariaLabel: `Route for ${x.ref}`}, x.routes.map(y => { const lvl = y.risk.level || 0;
           return el("button", {className: "proute", role: "radio", ariaChecked: String(y.id === r.id), disabled: locked, onclick: () => { p.route[x.ref] = y.id; renderProposal(); draw(); }},
             el("span", {className: "radio"}), el("b", {}, y.label, y.id === x.recommended_id ? el("span", {className: "badge badge-rec"}, "Suggested") : ""),

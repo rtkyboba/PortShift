@@ -196,6 +196,7 @@ def apply_details(shipments: list[dict], details: list[dict]) -> list[dict]:
     return out
 
 
+NOT_BY_AIR = {"container_20", "container_40", "reefer", "trailer", "tonne"}
 NEED = {"cargo": "what it carries and how much (for example 20 pallets, 4 reefers or 2 trailers)",
         "when": "when it should happen (for example arrive by Friday 17:00, leave tomorrow 08:00, as soon as possible, or no deadline)"}
 
@@ -227,6 +228,8 @@ def plan(text: str, preferences: dict | None = None, own_places: list[dict] | No
             arrive = when["at"] if when["kind"] == "arrive_by" else None
             res = planner.suggest(item["stops"], ["truck"] * (len(item["stops"]) - 1), when["at"] if when["kind"] == "depart_at" else None,
                                   preferences, own_places, cargo, arrive, "arrive" if arrive else "depart")
+            if cargo["unit_type"] in NOT_BY_AIR:  # containers, trailers and bulk do not go in an aircraft hold
+                res["routes"] = [r for r in res["routes"] if not any(l["mode"] == "plane" for l in r["legs"])] or res["routes"]
             for r in res["routes"]:  # why a route cannot meet the arrive-by date, if it cannot
                 r["late"] = next((t for t in r["problems"] if t.startswith("Too late")), None) or next((v for v in r["violations"] if "arrive-by" in v), None)
             possible = [r for r in res["routes"] if not [t for t in r["problems"] if not t.startswith("Too late")]]  # can physically be done

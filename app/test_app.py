@@ -1225,4 +1225,6 @@ def test_several_shipments_typed_at_once_each_get_a_chosen_route_and_late_ones_a
     assert all(r["late"] and r["late"].startswith("Too late") for r in b["routes"]) and b["cannot_meet_deadline"].startswith("Too late")
     assert all(not [t for t in r["problems"] if not t.startswith("Too late")] for r in b["routes"]) and pick(b)["id"] != "drawn"
     assert pick(c).get("slack_hours") is None and c["cannot_meet_deadline"] is None  # no deadline
+    assert not any(l["mode"] == "plane" for r in b["routes"] for l in r["legs"])  # 4 reefer containers are not offered by air
+    assert any(l["mode"] == "plane" for r in a["routes"] for l in r["legs"]) or len(a["routes"]) >= 1  # pallets may fly
     assert client.get("/api/planned").json() == [] or all(p.get("label") != a["label"] for p in client.get("/api/planned").json())  # nothing saved by planning
