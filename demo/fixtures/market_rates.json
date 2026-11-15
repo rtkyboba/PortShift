@@ -1,0 +1,62 @@
+[
+  {
+    "rate_id": "R-1",
+    "topic": "ocean-asia-europe",
+    "mode": "ship",
+    "claim": "SAMPLE: spot rate Shanghai to Rotterdam reported at USD 2,450 per 40 ft container, down 3% on the week",
+    "url": "https://sample-freight-index.invalid/sample/r-1",
+    "title": "Sample container index",
+    "domain": "sample-freight-index.invalid",
+    "retrieved_at": "2026-11-14T09:10:00Z",
+    "published_at": "2026-11-14T09:10:00Z",
+    "is_fixture": true
+  },
+  {
+    "rate_id": "R-2",
+    "topic": "ocean-asia-europe",
+    "mode": "ship",
+    "claim": "SAMPLE: carriers announce a general rate increase on Asia to North Europe from 1 December",
+    "url": "https://sample-news-j.invalid/sample/r-2",
+    "title": "Sample source J",
+    "domain": "sample-news-j.invalid",
+    "retrieved_at": "2026-11-14T08:40:00Z",
+    "published_at": "2026-11-14T08:40:00Z",
+    "is_fixture": true
+  },
+  {
+    "rate_id": "R-3",
+    "topic": "ocean-short-sea",
+    "mode": "ship",
+    "claim": "SAMPLE: short-sea box rates between Rotterdam and UK east coast ports steady at about EUR 950 per 45 ft unit",
+    "url": "https://sample-shortsea.invalid/sample/r-3",
+    "title": "Sample short-sea report",
+    "domain": "sample-shortsea.invalid",
+    "retrieved_at": "2026-11-14T08:05:00Z",
+    "published_at": "2026-11-14T08:05:00Z",
+    "is_fixture": true
+  },
+  {
+    "rate_id": "R-4",
+    "topic": "air",
+    "mode": "plane",
+    "claim": "SAMPLE: air freight index reports Europe to North America at USD 2.30 per kg; intra-Europe express about EUR 1.60 per kg",
+    "url": "https://sample-air-index.invalid/sample/r-4",
+    "title": "Sample air index",
+    "domain": "sample-air-index.invalid",
+    "retrieved_at": "2026-11-14T09:30:00Z",
+    "published_at": "2026-11-14T09:30:00Z",
+    "is_fixture": true
+  },
+  {
+    "rate_id": "R-5",
+    "topic": "road",
+    "mode": "truck",
+    "claim": "SAMPLE: European road freight spot rate index at 131 points; UK domestic haulage averaging GBP 2.10 per mile",
+    "url": "https://sample-road-index.invalid/sample/r-5",
+    "title": "Sample road benchmark",
+    "domain": "sample-road-index.invalid",
+    "retrieved_at": "2026-11-14T07:50:00Z",
+    "published_at": "2026-11-14T07:50:00Z",
+    "is_fixture": true
+  }
+]

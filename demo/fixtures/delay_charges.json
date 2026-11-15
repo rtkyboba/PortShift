@@ -1,0 +1,62 @@
+[
+  {
+    "mode": "ship",
+    "unit": "",
+    "partner": "",
+    "label": "Demurrage and detention",
+    "free_days": 1,
+    "per_unit_per_day": 95.0,
+    "rebooking_fee": 250.0,
+    "source": "default"
+  },
+  {
+    "mode": "ship",
+    "unit": "reefer",
+    "partner": "",
+    "label": "Demurrage, detention and reefer plug-in",
+    "free_days": 1,
+    "per_unit_per_day": 160.0,
+    "rebooking_fee": 250.0,
+    "source": "default"
+  },
+  {
+    "mode": "ship",
+    "unit": "tonne",
+    "partner": "",
+    "label": "Quay storage",
+    "free_days": 1,
+    "per_unit_per_day": 1.2,
+    "rebooking_fee": 250.0,
+    "source": "default"
+  },
+  {
+    "mode": "truck",
+    "unit": "km",
+    "partner": "",
+    "label": "Vehicle waiting time",
+    "free_days": 0,
+    "per_unit_per_day": 380.0,
+    "rebooking_fee": 120.0,
+    "source": "default"
+  },
+  {
+    "mode": "truck",
+    "unit": "pallet",
+    "partner": "",
+    "label": "Warehouse storage",
+    "free_days": 0,
+    "per_unit_per_day": 14.0,
+    "rebooking_fee": 90.0,
+    "source": "default"
+  },
+  {
+    "mode": "plane",
+    "unit": "kg",
+    "partner": "",
+    "label": "Airport storage",
+    "free_days": 0,
+    "per_unit_per_day": 0.22,
+    "rebooking_fee": 300.0,
+    "source": "default"
+  }
+]

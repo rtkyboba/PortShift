@@ -1,0 +1,19 @@
+.board/
+.env
+.env.local
+__pycache__/
+*.pyc
+.pytest_cache/
+.portshift_live/
+
+# third-party news text from Linkup (eval inputs); labels are committed
+finetune/real/raw_snippets.jsonl
+finetune/real/preds/
+finetune/v2/runs/*/checkpoints/
+finetune/v2/adaption_expand_*.jsonl
+finetune/v2/expand_kept.jsonl
+finetune/v2/rewrite_cache.jsonl
+finetune/v2/train_v2.jsonl
+finetune/v2/adaption_train_v2.jsonl
+finetune/v2/__pycache__/
+finetune/real/test_raw.jsonl

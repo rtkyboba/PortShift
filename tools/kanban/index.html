@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PortShift Kanban</title>
+<style>
+:root{--bg:#f5f6f8;--panel:#fff;--ink:#1c2230;--mute:#667085;--line:#e3e6ec;--accent:#2f6fed;
+--backlog:#98a2b3;--progress:#e0a100;--review:#7a4fe0;--done:#2e9e5b}
+@media (prefers-color-scheme:dark){:root{--bg:#12151c;--panel:#1b2030;--ink:#e8ebf2;--mute:#8b94a7;--line:#2a3144;--accent:#6b9bff}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--panel)}
+h1{font-size:17px;margin:0}.sp{flex:1}.mute{color:var(--mute);font-size:12px}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:4px 10px;border-radius:99px;cursor:pointer;font-size:12px}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.err{background:#fde8e8;color:#9b1c1c;padding:6px 20px;font-size:12px}
+.stats{display:flex;gap:18px;padding:10px 20px;flex-wrap:wrap}
+.stats b{font-size:18px}
+main{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) 320px;gap:12px;padding:0 20px 20px;align-items:start}
+.col,.feed{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;min-height:120px}
+.col h2,.feed h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;margin:2px 4px 10px;display:flex;justify-content:space-between;color:var(--mute)}
+.col h2::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:6px;align-self:center}
+.col h2 span.t{flex:1}
+.card{border:1px solid var(--line);border-left:3px solid var(--c);border-radius:8px;padding:8px 10px;margin-bottom:8px;background:var(--bg)}
+.card a{color:var(--ink);text-decoration:none;font-weight:600}.card a:hover{text-decoration:underline}
+.meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;font-size:11px;color:var(--mute)}
+.tag{padding:1px 7px;border-radius:99px;background:var(--line);color:var(--ink)}
+.post{border-bottom:1px solid var(--line);padding:8px 2px;font-size:12px}.post:last-child{border:0}
+.post .who{font-weight:600}.post p{margin:3px 0 0;white-space:pre-wrap;word-break:break-word}
+.feed{max-height:calc(100vh - 150px);overflow:auto}
+@media(max-width:1100px){main{grid-template-columns:repeat(2,1fr)}.feed{grid-column:1/-1}}
+@media(max-width:600px){main{grid-template-columns:1fr}}
+</style></head><body>
+<header><h1>PortShift · build board</h1><span class="mute" id="status">loading…</span><span class="sp"></span><div id="filters"></div></header>
+<div id="err"></div><div class="stats" id="stats"></div>
+<main id="main"></main>
+<script>
+const COLS=[["backlog","Backlog","--backlog"],["progress","In progress","--progress"],["review","In review","--review"],["done","Done","--done"]];
+let D=null,filter=localStorage.getItem("ps-filter")||"all";
+const ago=t=>{const s=(Date.now()-new Date(t))/1000;return s<90?"just now":s<5400?Math.round(s/60)+" min ago":s<129600?Math.round(s/3600)+" h ago":Math.round(s/86400)+" d ago"};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function render(){
+  if(!D)return;
+  const people=[...new Set(D.cards.flatMap(c=>c.people))].sort();
+  document.getElementById("filters").innerHTML=["all",...people].map(p=>`<button class="chip ${p===filter?"on":""}" data-p="${esc(p)}">${p==="all"?"Everyone":"@"+esc(p)}</button>`).join(" ");
+  document.querySelectorAll("#filters .chip").forEach(b=>b.onclick=()=>{filter=b.dataset.p;localStorage.setItem("ps-filter",filter);render()});
+  const cards=D.cards.filter(c=>filter==="all"||c.people.includes(filter)||(!c.people.length&&filter==="all"));
+  const n=k=>cards.filter(c=>c.col===k).length;
+  document.getElementById("stats").innerHTML=COLS.map(([k,l])=>`<div><b>${n(k)}</b> <span class="mute">${l.toLowerCase()}</span></div>`).join("")+
+    `<div><b>${Math.round(100*n("done")/Math.max(1,cards.length))}%</b> <span class="mute">complete</span></div>`;
+  document.getElementById("err").innerHTML=D.error?`<div class="err">GitHub refresh failed, showing last good data: ${esc(D.error)}</div>`:"";
+  document.getElementById("main").innerHTML=COLS.map(([k,l,v])=>`<section class="col" style="--c:var(${v})"><h2><span class="t">${l}</span>${n(k)}</h2>`+
+    cards.filter(c=>c.col===k).map(c=>`<div class="card" style="--c:var(${v})"><a href="${c.url}" target="_blank" rel="noopener">${c.kind==="pr"?"PR ":""}#${c.number} ${esc(c.title)}</a>
+    <div class="meta">${c.people.map(p=>`<span class="tag">@${esc(p)}</span>`).join("")}${c.people.length?"":'<span class="tag">unassigned</span>'}
+    ${c.kind==="issue"?c.prs.map(p=>`<a href="${p.url}" target="_blank" rel="noopener" class="tag">PR #${p.number} ${p.state.toLowerCase()}</a>`).join(""):""}
+    <span>${ago(c.updatedAt)}</span></div></div>`).join("")+`</section>`).join("")+
+    `<aside class="feed"><h2><span>Board posts</span></h2>`+D.posts.map(p=>`<div class="post"><span class="who">@${esc(p.author)}</span> <span class="mute">${ago(p.createdAt)}</span><p>${esc(p.body)}</p></div>`).join("")+`</aside>`;
+  document.getElementById("status").textContent=D.fetched_at?`synced ${ago(D.fetched_at*1000)} · refreshes every ${D.interval}s`:"waiting for first sync…";
+}
+async function load(){try{D=await (await fetch("/api/data")).json();render()}catch(e){document.getElementById("status").textContent="server unreachable"}}
+load();setInterval(load,15000);setInterval(render,30000);
+</script></body></html>

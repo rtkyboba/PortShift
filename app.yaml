@@ -1,0 +1,17 @@
+# Databricks App config. Deployed from the repo root because the app also loads pipelines/, agent/ and
+# demo/fixtures. The app's resources (set when the app is created) supply the warehouse and the token:
+#   sql-warehouse -> the SQL warehouse (CAN_USE); db-token -> secret portshift/databricks_token (READ)
+# DATABRICKS_HOST is set by Databricks Apps itself. Local runs use app/ and .env instead (see app/README.md).
+# No shell: under "sh -c" the app environment's uvicorn and python are not on PATH. 8000 is the Apps default port.
+command: ["uvicorn", "main:app", "--app-dir", "app", "--host", "0.0.0.0", "--port", "8000"]
+env:
+  - name: DATABRICKS_WAREHOUSE_ID
+    valueFrom: sql-warehouse
+  - name: DATABRICKS_TOKEN
+    valueFrom: db-token
+  - name: DATABRICKS_CATALOG
+    value: workspace
+  - name: DATABRICKS_SCHEMA
+    value: portshift
+  - name: EXTRACTOR_USE_BASE
+    value: "1"

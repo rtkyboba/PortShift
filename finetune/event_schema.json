@@ -1,0 +1,13 @@
+{
+  "$comment": "Per CONTRACTS.md section 4 (branch contracts-and-fixtures). Output is this object, or null when the snippet has no disruption. The model never outputs status, money or risk.",
+  "type": "object",
+  "required": ["type", "location", "window", "summary", "source_url", "published_at"],
+  "properties": {
+    "type": {"enum": ["strike", "closure", "weather", "warning", "congestion", "other"]},
+    "location": {"type": "object", "required": ["name", "lat", "lon"]},
+    "window": {"type": "object", "required": ["start", "end"]},
+    "summary": {"type": "string"},
+    "source_url": {"type": "string"},
+    "published_at": {"type": ["string", "null"]}
+  }
+}

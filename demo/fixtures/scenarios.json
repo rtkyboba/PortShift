@@ -1,0 +1,10 @@
+[
+ {
+  "scenario_id": "SC-1",
+  "label": "Reschedule S-1002 by 3 days",
+  "status": "tentative",
+  "created_at": "2026-11-14T15:00:00Z",
+  "cost_delta": 1410.0,
+  "currency": "EUR"
+ }
+]

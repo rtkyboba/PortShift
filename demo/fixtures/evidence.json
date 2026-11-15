@@ -1,0 +1,123 @@
+[
+  {
+    "evidence_id": "V-1",
+    "event_id": "E-1",
+    "claim": "SAMPLE: dock workers announce strike at Rotterdam terminals",
+    "url": "https://sample-news-a.invalid/sample/v-1",
+    "title": "Sample source A",
+    "retrieved_at": "2026-11-14T14:50:00Z",
+    "published_at": "2026-11-14T14:50:00Z",
+    "domain": "sample-news-a.invalid",
+    "is_official": false
+  },
+  {
+    "evidence_id": "V-2",
+    "event_id": "E-1",
+    "claim": "SAMPLE: port authority confirms reduced operations",
+    "url": "https://port-authority.invalid/sample/v-2",
+    "title": "Sample source B",
+    "retrieved_at": "2026-11-14T14:30:00Z",
+    "published_at": "2026-11-14T14:30:00Z",
+    "domain": "port-authority.invalid",
+    "is_official": true
+  },
+  {
+    "evidence_id": "V-3",
+    "event_id": "E-2",
+    "claim": "SAMPLE: warning of possible Suez transit restrictions",
+    "url": "https://sample-news-c.invalid/sample/v-3",
+    "title": "Sample source C",
+    "retrieved_at": "2026-11-14T13:10:00Z",
+    "published_at": "2026-11-14T13:10:00Z",
+    "domain": "sample-news-c.invalid",
+    "is_official": false
+  },
+  {
+    "evidence_id": "V-4",
+    "event_id": "E-3",
+    "claim": "SAMPLE: Calais port strike disrupts ferries",
+    "url": "https://sample-news-d.invalid/sample/v-4",
+    "title": "Sample source D",
+    "retrieved_at": "2026-11-14T14:00:00Z",
+    "published_at": "2026-11-14T14:00:00Z",
+    "domain": "sample-news-d.invalid",
+    "is_official": false
+  },
+  {
+    "evidence_id": "V-5",
+    "event_id": "E-3",
+    "claim": "SAMPLE: port authority confirms strike action at Calais",
+    "url": "https://calais-port-authority.invalid/sample/v-5",
+    "title": "Sample official notice",
+    "retrieved_at": "2026-11-14T13:50:00Z",
+    "published_at": "2026-11-14T13:45:00Z",
+    "domain": "calais-port-authority.invalid",
+    "is_official": true
+  },
+  {
+    "evidence_id": "V-6",
+    "event_id": "E-4",
+    "claim": "SAMPLE: advisory of possible freight delays around Dallas",
+    "url": "https://sample-news-f.invalid/sample/v-6",
+    "title": "Sample source F",
+    "retrieved_at": "2026-11-14T12:05:00Z",
+    "published_at": "2026-11-14T12:00:00Z",
+    "domain": "sample-news-f.invalid",
+    "is_official": false
+  },
+  {
+    "evidence_id": "V-7",
+    "event_id": "E-2",
+    "claim": "SAMPLE: canal authority announces closure to northbound transits",
+    "url": "https://suez-canal-authority.invalid/sample/v-7",
+    "title": "Sample official notice",
+    "retrieved_at": "2026-11-14T13:20:00Z",
+    "published_at": "2026-11-14T13:00:00Z",
+    "domain": "suez-canal-authority.invalid",
+    "is_official": true
+  },
+  {
+    "evidence_id": "V-8",
+    "event_id": "E-5",
+    "claim": "SAMPLE: port suspends vessel operations as gusts pass the working limit",
+    "url": "https://felixstowe-port.invalid/sample/v-8",
+    "title": "Sample port notice",
+    "retrieved_at": "2026-11-14T10:20:00Z",
+    "published_at": "2026-11-14T10:20:00Z",
+    "domain": "felixstowe-port.invalid",
+    "is_official": true
+  },
+  {
+    "evidence_id": "V-9",
+    "event_id": "E-5",
+    "claim": "SAMPLE: ships held off Felixstowe as storm closes the quay",
+    "url": "https://sample-news-g.invalid/sample/v-9",
+    "title": "Sample source G",
+    "retrieved_at": "2026-11-14T10:45:00Z",
+    "published_at": "2026-11-14T10:45:00Z",
+    "domain": "sample-news-g.invalid",
+    "is_official": false
+  },
+  {
+    "evidence_id": "V-10",
+    "event_id": "E-6",
+    "claim": "SAMPLE: overnight closure of the M6 near Carlisle reported for bridge works",
+    "url": "https://sample-news-h.invalid/sample/v-10",
+    "title": "Sample source H",
+    "retrieved_at": "2026-11-14T09:35:00Z",
+    "published_at": "2026-11-14T09:35:00Z",
+    "domain": "sample-news-h.invalid",
+    "is_official": false
+  },
+  {
+    "evidence_id": "V-11",
+    "event_id": "E-7",
+    "claim": "SAMPLE: ground handlers at Heathrow to vote on a one-day walkout",
+    "url": "https://sample-news-i.invalid/sample/v-11",
+    "title": "Sample source I",
+    "retrieved_at": "2026-11-14T08:15:00Z",
+    "published_at": "2026-11-14T08:15:00Z",
+    "domain": "sample-news-i.invalid",
+    "is_official": false
+  }
+]

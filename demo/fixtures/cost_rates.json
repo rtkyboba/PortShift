@@ -1,0 +1,23 @@
+[
+  {
+    "mode": "truck",
+    "per_delay_day": 420.0,
+    "rebooking_fee": 150.0,
+    "per_extra_km": 1.8,
+    "currency": "EUR"
+  },
+  {
+    "mode": "ship",
+    "per_delay_day": 1800.0,
+    "rebooking_fee": 600.0,
+    "per_extra_km": 3.2,
+    "currency": "EUR"
+  },
+  {
+    "mode": "plane",
+    "per_delay_day": 3200.0,
+    "rebooking_fee": 900.0,
+    "per_extra_km": 5.5,
+    "currency": "EUR"
+  }
+]

@@ -1,0 +1,128 @@
+[
+  {
+    "shipment_id": "S-1001",
+    "cargo": "Consumer electronics, 14 TEU",
+    "origin": "Shanghai",
+    "destination": "Rotterdam",
+    "mode": "ship",
+    "eta": "2026-12-02T08:00:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1002",
+    "cargo": "Auto parts, 22 pallets",
+    "origin": "Rotterdam",
+    "destination": "Duisburg",
+    "mode": "truck",
+    "eta": "2026-11-16T10:00:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1003",
+    "cargo": "Pharma cold chain, 4 pallets",
+    "origin": "Frankfurt",
+    "destination": "Los Angeles",
+    "mode": "plane",
+    "eta": "2026-11-14T20:00:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1004",
+    "cargo": "Textiles, 9 TEU",
+    "origin": "Piraeus",
+    "destination": "Hamburg",
+    "mode": "ship",
+    "eta": "2026-11-24T06:00:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1005",
+    "cargo": "Machinery, 2 trailers",
+    "origin": "Felixstowe",
+    "destination": "Duisburg",
+    "mode": "truck",
+    "eta": "2026-11-18T18:00:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1006",
+    "cargo": "Retail goods, 11 TEU",
+    "origin": "Long Beach",
+    "destination": "Dallas",
+    "mode": "truck",
+    "eta": "2026-11-19T12:00:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1007",
+    "cargo": "Chilled produce, 12 reefers",
+    "origin": "Zeebrugge",
+    "destination": "Felixstowe",
+    "mode": "ship",
+    "eta": "2026-11-15T07:00:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1008",
+    "cargo": "Whisky, 20 TEU",
+    "origin": "Grangemouth",
+    "destination": "Birmingham",
+    "mode": "ship",
+    "eta": "2026-11-15T12:30:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1009",
+    "cargo": "Retail stock, 26 pallets",
+    "origin": "Glasgow",
+    "destination": "London (Hayes)",
+    "mode": "truck",
+    "eta": "2026-11-16T10:00:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1010",
+    "cargo": "Medical devices, 8 pallets",
+    "origin": "Birmingham",
+    "destination": "Brussels",
+    "mode": "truck",
+    "eta": "2026-11-18T06:00:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1011",
+    "cargo": "Aerospace parts, 3 pallets",
+    "origin": "London Heathrow",
+    "destination": "Madrid",
+    "mode": "plane",
+    "eta": "2026-11-19T16:20:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1012",
+    "cargo": "Steel coil, 400 t",
+    "origin": "Hamburg",
+    "destination": "Immingham",
+    "mode": "ship",
+    "eta": "2026-11-15T04:00:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1013",
+    "cargo": "Furniture, 14 pallets",
+    "origin": "Southampton",
+    "destination": "Bristol",
+    "mode": "truck",
+    "eta": "2026-11-14T13:00:00Z",
+    "is_demo_fleet": true
+  },
+  {
+    "shipment_id": "S-1014",
+    "cargo": "Dairy, 6 reefers",
+    "origin": "Dublin",
+    "destination": "Manchester",
+    "mode": "ship",
+    "eta": "2026-11-15T08:00:00Z",
+    "is_demo_fleet": true
+  }
+]

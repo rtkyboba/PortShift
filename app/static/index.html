@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PortShift</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<link rel="stylesheet" href="app.css">
+<script>try { document.documentElement.dataset.theme = new URLSearchParams(location.search).get("theme") || localStorage.getItem("portshift.theme") || "light"; } catch { document.documentElement.dataset.theme = "light"; }</script>
+</head>
+<body>
+<header class="top">
+  <span class="logo" aria-hidden="true"><b>P</b></span>
+  <h1>PORT<span>SHIFT</span></h1>
+  <div class="status">
+    <button id="brief-open" class="brief-btn" type="button" title="What PortShifter found and proposes, step by step">Briefing</button>
+    <span id="live" class="live"></span>
+    <span id="fresh" class="fresh" aria-live="polite"></span>
+    <span class="fleet" title="An example operator moving freight around the UK and Europe. The shipments are synthetic, placed on real ports, roads and airports. The disruptions are real.">
+      <b>DEMO FLEET</b><span id="n-map"></span>
+    </span>
+  </div>
+  <button id="theme" class="theme-toggle" type="button" role="switch" aria-checked="false" aria-label="Dark theme" title="Switch between light and dark">
+    <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.500v2.500M12 19v2.500M2.500 12H5M19 12h2.500M5.300 5.300 7 7M17 17l1.700 1.700M5.300 18.700 7 17M17 7l1.700-1.700"/></svg>
+    <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.500A8 8 0 0 1 9.500 4 8 8 0 1 0 20 14.500z"/></svg>
+  </button>
+</header>
+<div class="shell">
+  <nav class="rail" role="tablist" aria-label="Views" aria-orientation="vertical">
+    <button role="tab" id="tab-map" aria-selected="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>
+      <span>Live operations</span>
+    </button>
+    <button role="tab" id="tab-evt" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.500 20h19zM12 9v5M12 16.500v.5"/></svg>
+      <span>Possible disruptions</span><i id="n-evt" class="n"></i>
+    </button>
+    <button role="tab" id="tab-new" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8 17h6a3 3 0 0 0 3-3V9"/></svg>
+      <span>Plan a shipment</span>
+    </button>
+    <button role="tab" id="tab-flt" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 7h11v9H2zM13 10h5l3 3v3h-8zM6.500 19a1.500 1.500 0 1 0 0-3 1.500 1.500 0 0 0 0 3zM17 19a1.500 1.500 0 1 0 0-3 1.500 1.500 0 0 0 0 3z"/></svg>
+      <span>Fleet</span>
+    <button role="tab" id="tab-pln" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4M8 14l2.500 2.500L16 12"/></svg>
+      <span>Planned shipments</span><i id="n-pln" class="n"></i>
+    </button>
+    <button role="tab" id="tab-ins" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+      <span>Insights</span>
+    </button>
+    <button role="tab" id="tab-rat" aria-selected="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8zM7.500 8.500h.01"/></svg>
+      <span>My rates</span>
+    </button>
+    <button id="bot-open" class="bottom bot-open" type="button" aria-expanded="false" title="Show or hide PortShifter, the assistant">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4zM8 9.500h8M8 12.500h5"/></svg>
+      <span id="bot-open-label">Ask PortShifter</span>
+    </button>
+  </nav>
+  <main class="workspace" id="ws">
+    <div id="map" role="application" aria-label="Shipment map"></div>
+    <aside id="legend" class="map-key card" aria-label="Map key">
+      <button id="legend-toggle" class="legend-head" type="button" aria-expanded="true" aria-controls="legend-body">
+        <span>Map key <em class="legend-show">· show</em></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div id="legend-body" class="legend-body"></div>
+    </aside>
+
+    <div class="left">
+      <div class="heading">
+        <div class="eyebrow" id="view-kicker">Global operations</div>
+        <h2 id="view-title">Fleet overview</h2>
+        <p id="view-sub"></p>
+      </div>
+      <section class="lp" aria-label="View panel">
+        <div id="side-map" class="lp-body">
+          <div class="lp-head">
+            <label class="sr" for="q">Search shipments</label>
+            <input id="q" class="search" type="search" autocomplete="off" placeholder="Search shipments">
+            <label class="sr" for="sort-map">Sort shipments</label>
+            <select id="sort-map" class="sort"></select>
+          </div>
+          <div id="levels" class="filters" aria-label="Filter shipments"></div>
+          <ul id="list" class="rows"></ul>
+        </div>
+        <div id="side-evt" class="lp-body" hidden>
+          <div class="lp-head">
+            <div id="evt-filter" class="seg3" role="group" aria-label="Filter disruptions"></div>
+            <label class="sr" for="sort-evt">Sort disruptions</label>
+            <select id="sort-evt" class="sort"></select>
+          </div>
+          <div id="evt" class="rows"></div>
+        </div>
+        <div id="side-new" class="lp-body" hidden><div id="new" class="scroll"></div></div>
+        <div id="side-pln" class="lp-body" hidden><div id="pln" class="scroll"></div></div>
+        <div id="side-ins" class="lp-body" hidden><div id="ins" class="scroll"></div></div>
+        <div id="side-flt" class="lp-body" hidden><div id="flt" class="scroll"></div></div>
+        <div id="side-rat" class="lp-body" hidden><div id="rat" class="scroll"></div></div>
+      </section>
+    </div>
+
+    <section id="bot" class="bot" aria-label="Ask PortShifter" hidden>
+      <div id="bot-head" class="bot-head" title="Drag to move">
+        <div><b>Ask PortShifter</b><span id="bot-sub" class="note"></span></div>
+        <span class="bot-tools">
+          <button id="bot-clear" class="textbtn" type="button" title="Start a new conversation">New chat</button>
+          <button id="bot-close" class="iconbtn" type="button" aria-label="Hide PortShifter" title="Hide (the conversation is kept)"><svg viewBox="0 0 24 24"><path d="M6 12h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></button>
+        </span>
+      </div>
+      <div id="bot-log" class="log" aria-live="polite"></div>
+      <div id="bot-chips" class="bot-chips"></div>
+      <form id="bot-form">
+        <label class="sr" for="bot-msg">Message to PortShifter</label>
+        <input id="bot-msg" autocomplete="off" placeholder="Ask about your shipments, or give me a job">
+        <button aria-label="Send">Send</button>
+      </form>
+    </section>
+    <div id="focus" class="focus-chip" hidden></div>
+    <section id="proposal" class="proposal" aria-label="Suggested plan for the fleet" hidden></section>
+    <section id="whatif" class="proposal whatif" aria-label="What if: a hypothetical disruption" hidden></section>
+    <section id="briefing" class="proposal" aria-label="PortShifter briefing" hidden></section>
+
+    <aside id="detail" class="detail" aria-label="Shipment" hidden>
+      <div id="detail-head" class="detail-head"></div>
+      <div class="ptabs" role="tablist" aria-label="Shipment sections">
+        <button role="tab" id="ptab-details" aria-selected="true">Shipment details</button>
+        <button role="tab" id="ptab-chat" aria-selected="false">Ask PortShifter <i class="ai-dot"></i></button>
+        <button role="tab" id="ptab-plan" aria-selected="false">Options</button>
+      </div>
+      <div id="panel" class="scroll"></div>
+      <div id="chat-host" class="chat-host" hidden>
+        <section id="chat" class="chat" aria-label="Ask PortShift">
+          <div id="log" class="log" aria-live="polite"></div>
+          <div id="pref-edit" class="pref-edit" hidden></div>
+          <button id="pref-chip" class="limits-chip" type="button"></button>
+          <div id="quick" class="quick" role="group" aria-label="Suggested questions"></div>
+          <form id="chat-form">
+            <label class="sr" for="msg">Message</label>
+            <input id="msg" autocomplete="off">
+            <button aria-label="Send">Ask</button>
+          </form>
+        </section>
+      </div>
+      <div id="plan" class="scroll" hidden></div>
+    </aside>
+  </main>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

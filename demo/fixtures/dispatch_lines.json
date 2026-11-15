@@ -1,0 +1,10 @@
+[
+  {
+    "order_id": "DO-1001",
+    "stock_id": "ST-009",
+    "sku": "AUT-27",
+    "item": "Automotive parts",
+    "quantity": 18,
+    "unit": "pallet"
+  }
+]

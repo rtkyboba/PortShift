@@ -1,0 +1,142 @@
+[
+  {
+    "shipment_id": "S-1001",
+    "carrier": "Evercore Line",
+    "units": 14,
+    "unit_type": "container_20",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-12-04T08:00:00Z",
+    "late_penalty_per_day": 1200.0
+  },
+  {
+    "shipment_id": "S-1002",
+    "carrier": "Rhine Road Freight",
+    "units": 22,
+    "unit_type": "pallet",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-11-16T18:00:00Z",
+    "late_penalty_per_day": 450.0
+  },
+  {
+    "shipment_id": "S-1003",
+    "carrier": "AeroBridge Cargo",
+    "units": 4,
+    "unit_type": "pallet",
+    "weight_kg": 1200.0,
+    "volume_m3": 6.0,
+    "promised_by": "2026-11-15T08:00:00Z",
+    "late_penalty_per_day": 1500.0
+  },
+  {
+    "shipment_id": "S-1004",
+    "carrier": "Hanse Short Sea",
+    "units": 9,
+    "unit_type": "container_20",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-11-25T06:00:00Z",
+    "late_penalty_per_day": 800.0
+  },
+  {
+    "shipment_id": "S-1005",
+    "carrier": "Rhine Road Freight",
+    "units": 2,
+    "unit_type": "trailer",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-11-19T06:00:00Z",
+    "late_penalty_per_day": 600.0
+  },
+  {
+    "shipment_id": "S-1006",
+    "carrier": "Sunbelt Trucking",
+    "units": 11,
+    "unit_type": "container_20",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-11-20T12:00:00Z",
+    "late_penalty_per_day": 700.0
+  },
+  {
+    "shipment_id": "S-1007",
+    "carrier": "Evercore Line",
+    "units": 12,
+    "unit_type": "reefer",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-11-15T19:00:00Z",
+    "late_penalty_per_day": 900.0
+  },
+  {
+    "shipment_id": "S-1008",
+    "carrier": "Hanse Short Sea",
+    "units": 20,
+    "unit_type": "container_20",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-11-16T12:00:00Z",
+    "late_penalty_per_day": 500.0
+  },
+  {
+    "shipment_id": "S-1009",
+    "carrier": "Calder Haulage",
+    "units": 26,
+    "unit_type": "pallet",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-11-16T18:00:00Z",
+    "late_penalty_per_day": 400.0
+  },
+  {
+    "shipment_id": "S-1010",
+    "carrier": "Calder Haulage",
+    "units": 8,
+    "unit_type": "pallet",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-11-18T18:00:00Z",
+    "late_penalty_per_day": 1000.0
+  },
+  {
+    "shipment_id": "S-1011",
+    "carrier": "AeroBridge Cargo",
+    "units": 3,
+    "unit_type": "pallet",
+    "weight_kg": 540.0,
+    "volume_m3": 4.2,
+    "promised_by": "2026-11-20T09:00:00Z",
+    "late_penalty_per_day": 1500.0
+  },
+  {
+    "shipment_id": "S-1012",
+    "carrier": "Hanse Short Sea",
+    "units": 400,
+    "unit_type": "tonne",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-11-16T04:00:00Z",
+    "late_penalty_per_day": 600.0
+  },
+  {
+    "shipment_id": "S-1013",
+    "carrier": "Calder Haulage",
+    "units": 14,
+    "unit_type": "pallet",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-11-15T09:00:00Z",
+    "late_penalty_per_day": 300.0
+  },
+  {
+    "shipment_id": "S-1014",
+    "carrier": "Evercore Line",
+    "units": 6,
+    "unit_type": "reefer",
+    "weight_kg": 0.0,
+    "volume_m3": 0.0,
+    "promised_by": "2026-11-15T20:00:00Z",
+    "late_penalty_per_day": 700.0
+  }
+]

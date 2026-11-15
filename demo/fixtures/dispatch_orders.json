@@ -1,0 +1,19 @@
+[
+  {
+    "order_id": "DO-1001",
+    "warehouse": "Birmingham warehouse",
+    "destination": "London warehouse (Hayes)",
+    "stops": [
+      "Birmingham warehouse",
+      "London warehouse (Hayes)"
+    ],
+    "route_label": "By road",
+    "status": "acknowledged",
+    "submitted_at": "2026-11-14T07:30:00Z",
+    "depart_at": "2026-11-15T06:00:00Z",
+    "eta": "2026-11-15T09:00:00Z",
+    "cost": 310.0,
+    "currency": "EUR",
+    "is_sample": true
+  }
+]

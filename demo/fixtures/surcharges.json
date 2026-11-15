@@ -1,0 +1,66 @@
+[
+  {
+    "code": "BAF",
+    "mode": "ship",
+    "label": "Bunker (fuel) adjustment",
+    "partner": "",
+    "basis": "percent_of_base",
+    "value": 12.0,
+    "applies_to_units": [],
+    "source": "default"
+  },
+  {
+    "code": "THC",
+    "mode": "ship",
+    "label": "Terminal handling, both ports",
+    "partner": "",
+    "basis": "per_unit",
+    "value": 190.0,
+    "applies_to_units": [
+      "container_20",
+      "container_40",
+      "reefer"
+    ],
+    "source": "default"
+  },
+  {
+    "code": "ETS",
+    "mode": "ship",
+    "label": "Emissions surcharge",
+    "partner": "",
+    "basis": "percent_of_base",
+    "value": 3.0,
+    "applies_to_units": [],
+    "source": "default"
+  },
+  {
+    "code": "FSC",
+    "mode": "truck",
+    "label": "Fuel surcharge",
+    "partner": "",
+    "basis": "percent_of_base",
+    "value": 8.0,
+    "applies_to_units": [],
+    "source": "default"
+  },
+  {
+    "code": "FSC",
+    "mode": "plane",
+    "label": "Fuel surcharge",
+    "partner": "",
+    "basis": "percent_of_base",
+    "value": 18.0,
+    "applies_to_units": [],
+    "source": "default"
+  },
+  {
+    "code": "SEC",
+    "mode": "plane",
+    "label": "Security screening",
+    "partner": "",
+    "basis": "per_unit",
+    "value": 0.12,
+    "applies_to_units": [],
+    "source": "default"
+  }
+]

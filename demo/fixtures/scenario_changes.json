@@ -1,0 +1,11 @@
+[
+  {
+    "scenario_id": "SC-1",
+    "shipment_id": "S-1002",
+    "change_type": "reschedule",
+    "delay_days": 3,
+    "new_planned_start": "2026-11-18T06:00:00Z",
+    "cost_delta": 1410.0,
+    "note": "Wait out the Rotterdam strike window"
+  }
+]

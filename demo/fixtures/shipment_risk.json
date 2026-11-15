@@ -1,0 +1,106 @@
+[
+ {
+  "shipment_id": "S-1001",
+  "level": 4,
+  "reason": "Confirmed closure at Suez Canal on a later leg, more than 24 h away",
+  "event_ids": [
+   "E-2"
+  ]
+ },
+ {
+  "shipment_id": "S-1002",
+  "level": 5,
+  "reason": "Confirmed strike at Port of Rotterdam on the current leg",
+  "event_ids": [
+   "E-1"
+  ]
+ },
+ {
+  "shipment_id": "S-1003",
+  "level": 1,
+  "reason": "No event on any remaining leg",
+  "event_ids": []
+ },
+ {
+  "shipment_id": "S-1004",
+  "level": 3,
+  "reason": "Confirmed strike at Port of Rotterdam near the route",
+  "event_ids": [
+   "E-1",
+   "E-3",
+   "E-5"
+  ]
+ },
+ {
+  "shipment_id": "S-1005",
+  "level": 5,
+  "reason": "Confirmed strike at Calais on the next leg",
+  "event_ids": [
+   "E-3"
+  ]
+ },
+ {
+  "shipment_id": "S-1006",
+  "level": 2,
+  "reason": "Suspected warning at Dallas, more than 72 h before the shipment reaches it",
+  "event_ids": [
+   "E-4"
+  ]
+ },
+ {
+  "shipment_id": "S-1007",
+  "level": 5,
+  "reason": "Confirmed closure at Port of Felixstowe on the current leg",
+  "event_ids": [
+   "E-5"
+  ]
+ },
+ {
+  "shipment_id": "S-1008",
+  "level": 1,
+  "reason": "No event on any remaining leg",
+  "event_ids": []
+ },
+ {
+  "shipment_id": "S-1009",
+  "level": 3,
+  "reason": "Suspected closure at M6 near Carlisle on a leg within 72 h",
+  "event_ids": [
+   "E-6"
+  ]
+ },
+ {
+  "shipment_id": "S-1010",
+  "level": 4,
+  "reason": "Confirmed strike at Calais on a later leg, more than 24 h away",
+  "event_ids": [
+   "E-3"
+  ]
+ },
+ {
+  "shipment_id": "S-1011",
+  "level": 2,
+  "reason": "Suspected strike at London Heathrow, more than 72 h before the shipment reaches it",
+  "event_ids": [
+   "E-7"
+  ]
+ },
+ {
+  "shipment_id": "S-1012",
+  "level": 1,
+  "reason": "No event on any remaining leg",
+  "event_ids": []
+ },
+ {
+  "shipment_id": "S-1013",
+  "level": 1,
+  "reason": "No event on any remaining leg",
+  "event_ids": []
+ },
+ {
+  "shipment_id": "S-1014",
+  "level": 1,
+  "reason": "No event on any remaining leg",
+  "event_ids": []
+ }
+]
