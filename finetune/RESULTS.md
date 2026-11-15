@@ -99,7 +99,7 @@ Every label is exact by construction; nothing is copied from either real set; so
 |---|---|---|---|
 | A | 1,800 template rows | 0.7654 (3 iterations, target 0.85) | `924b8f3e-e770-4704-9fed-59dfb1d1a57a` (dataset `aeb5e3ce`) |
 | B | same rows, 782 reworded by Llama 3.3 70B with fact and label checks | 0.7288 (3 iterations) | `11efbc11-05a4-4cab-aa04-679d03c7a9ea` (dataset `c62956af`) |
-| C | B + 400 rows for run A's dev failure groups (271 reworded), 2,200 rows | training | `b0a2fa1a-b2b0-466d-bf55-6a076b7abab1` (dataset `dc5e5783`) |
+| C | B + 400 rows for run A's dev failure groups (271 reworded), 2,200 rows | 0.7399 (3 iterations) | `b0a2fa1a-b2b0-466d-bf55-6a076b7abab1` (dataset `dc5e5783`) |
 
 Detection on real results (an event or not), unambiguous rows only:
 
@@ -108,6 +108,7 @@ Detection on real results (an event or not), unambiguous rows only:
 | Base Qwen3.5-2B, same prompt | 0.468 | 0.310 | 0.361 | 0.220 | 1.000 |
 | Fine-tune run A (template data) | 0.852 | 0.742 | 0.733 | 0.579 | 1.000 |
 | **Fine-tune run B (reworded data)** | **0.936** | **0.917** | **0.857** | **0.900** | **0.818** |
+| Fine-tune run C (B + targeted rows) | 0.898 | 0.846 | 0.818 | 0.818 | 0.818 |
 | Llama 3.3 70B (Databricks), strict prompt (the live extractor) | 0.917 | 0.880 | 0.870 | 0.833 | 0.909 |
 
 - Run B, the same 2B model trained on reworded rows, more than doubles the base model's F1 on the untouched test
@@ -116,6 +117,11 @@ Detection on real results (an event or not), unambiguous rows only:
   model calls almost everything an event (60 of 60 on test).
 - Run A (template text only) generalised worse (test 0.733): rewording the same facts in varied styles is what
   moved the score, not more rows.
+- Run C added 400 rows aimed at run A's dev mistakes (recovery news, works, passenger items, called strikes,
+  security alerts). It fixed the types (every event it found on test had the right type) but raised more false
+  alarms and missed two Hormuz reports, so it scores below B on both sets. **Run B is the best extractor fine-tune.**
+  More targeted rows did not beat varied wording; with 11 test events, one event is about 0.05 F1, so B and C are
+  close and a bigger test set would be needed to separate them with confidence.
 - Run A's false alarms were mostly recovery news ("capacity raised", "carrier resumes transits") and
   infrastructure or passenger items; run B has 1 false alarm on test (an FAQ page).
 - On the synthetic held-out rows run A is 240/240 on detection: that set no longer separates runs; the real sets do.
