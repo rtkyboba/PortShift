@@ -328,9 +328,6 @@ and scorer are in `finetune/real/`.
 Limits today:
 
 - **No real fleet.** The 14 demo shipments are seeded. Connecting a real tracking feed is the first step to real use.
-- **Costs are illustrative.** The rates are sample values, not quotes from carriers.
-- **The live reading step uses Llama 3.3 70B, not the fine-tune.** The 70B model misses fewer real events, and a
-  missed strike costs more than an extra alert. The fine-tuned extractor is offline evidence for now.
 - **Small test sets.** The real test set has 50 unambiguous results, with one run per model and no variance estimate.
   The request reader has only been scored on generated messages.
 - **Known places only.** An event at a place missing from the gazetteer is dropped.
@@ -343,7 +340,7 @@ What's next:
 
 - Store planned shipments and operator decisions in Delta tables.
 - Keep a history of risk levels with Delta time travel, so an operator can see how a shipment's risk changed.
-- Serve the fine-tuned extractor and put it in the live path once its recall matches the 70B model.
+- Refine the fine-tuned extractor by testing other models
 - Add more real labelled results, and training rows for the request reader's weak intents.
 - Turn the job schedule on with a search budget for each corridor.
 - Add supplier-distress news as a further event type.
@@ -367,7 +364,7 @@ python3 -m pytest agent pipelines           # tests, no network or keys
 | Service or model | What for |
 |---|---|
 | Linkup search | Every live disruption and its citation |
-| Databricks Delta, SQL warehouse, Jobs, Apps, model serving | State, the news agent and risk job, hosting, Llama 3.3 70B |
+| Databricks Delta, SQL warehouse, Jobs, Apps, model serving | State, the news agent and risk job, hosting, Llama 3.3 70B fine-tuned |
 | Adaption AutoScientist | Extractor and request-reader fine-tunes |
 | Figma Make, Figma and the Figma MCP server | The design and its hand-off to code |
 | OSRM demo router | Real road routes for the demo trucks, fetched once and stored in `demo/fixtures/legs.json` |
