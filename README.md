@@ -156,8 +156,3 @@ On data: the demo fleet in `demo/fixtures/` is synthetic and sample events use `
 badge. The fine-tune training data is generated, with exact labels. The only real-world data are the live search
 results and our hand labels for them. Default rates are illustrative, and market rates carry a source on each line.
 No real fleet or customer data is used anywhere.
-
-## Team
-
-Four people, with one Claude Code agent each per repo. The agents coordinated on a pinned GitHub issue (the board,
-via `tools/board`). Who owned what is in `AGENTS.md`.
