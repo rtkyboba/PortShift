@@ -5,6 +5,14 @@ a port strike in Rotterdam is about to wreck three of their shipments. It reads 
 and warnings, works out which shipments are hit, scores each one from 1 (clear) to 5 (critical), and suggests what
 to do about it, with a cost and a source link for every claim.
 
+<table>
+<tr>
+<td align="center" valign="top"><img src="design/app/01-live-operations.png" width="290" alt="Live operations: the demo fleet on a map, coloured by risk level, with the shipment list sorted by urgency."><br>The fleet on the map, coloured by risk.</td>
+<td align="center" valign="top"><img src="design/app/03-shipment-details.png" width="290" alt="A shipment opened: its route, the disruption, why it has that risk level, and the sources."><br>One shipment: route, reason, sources.</td>
+<td align="center" valign="top"><img src="design/app/05-reschedule.png" width="290" alt="Reschedule: options to wait or reroute, each with an estimated cost and new arrival time."><br>Wait or reroute, each with a cost.</td>
+</tr>
+</table>
+
 One thing up front, because it matters: **the fleet is fake and the disruptions are real.** We don't have a real
 company's shipments, so the demo fleet is made up, but it sits on real ports, roads and airports, and the news it
 reacts to comes from live web searches. Costs are estimates from illustrative rates, and the app says so wherever a
@@ -37,6 +45,36 @@ The code is split the same way:
 - `finetune/` and `evals/` hold the fine-tunes and how we measured them.
 
 `AGENTS.md` has the risk rules and `CONTRACTS.md` has the tables and interfaces.
+
+## The app
+
+Screenshots of the running app on the demo fixtures: a made-up fleet and sample disruptions, marked "sample" on screen.
+Every cost shown is an estimate at illustrative rates, and nothing is booked.
+
+<table>
+<tr>
+<td align="center" valign="top"><img src="design/app/02-possible-disruptions.png" width="430" alt="Possible disruptions: one card per disruption with when it starts, the shipments it hits and the estimated cost."><br>Possible disruptions: what is coming, which shipments it hits, and what waiting would cost.</td>
+<td align="center" valign="top"><img src="design/app/04-ask-agent.png" width="430" alt="Ask agent: a typed request turned into a setting, with options to submit."><br>Ask agent: "lower the risk but keep the cost low" becomes a setting and a set of options.</td>
+</tr>
+<tr>
+<td align="center" valign="top"><img src="design/app/06-plan-a-shipment.png" width="430" alt="Plan a shipment: Edinburgh to Brussels with suggested routes by road and ferry, sea and air."><br>Plan a shipment: suggested routes by road and ferry, sea and air.</td>
+<td align="center" valign="top"><img src="design/app/07-plan-ship-then-truck.png" width="430" alt="Plan a shipment: a ship leg followed by a truck leg, flagged by the Felixstowe closure."><br>A ship leg chained with a truck leg, flagged by a closure on the way.</td>
+</tr>
+<tr>
+<td align="center" valign="top"><img src="design/app/10-planned-shipments.png" width="430" alt="Planned shipments: a kept plan with status, cost, risk and stops, and its dashed route on the map."><br>Planned shipments: plans you kept, with status, cost, risk and stops.</td>
+<td align="center" valign="top"><img src="design/app/11-fleet.png" width="430" alt="Fleet: the operator's vehicles with their status, and depots on the map."><br>Fleet: the operator's own vehicles and depots.</td>
+</tr>
+<tr>
+<td align="center" valign="top"><img src="design/app/12-truck-route-on-roads.png" width="430" alt="A truck shipment opened: the route follows real roads through the Channel Tunnel."><br>Truck routes follow real roads, here through the Channel Tunnel.</td>
+<td align="center" valign="top"><img src="design/app/08-insights.png" width="430" alt="Insights: fleet statistics."><br>Insights: fleet statistics.</td>
+</tr>
+<tr>
+<td align="center" valign="top"><img src="design/app/09-dark-theme.png" width="430" alt="The app in its dark theme."><br>Dark theme, the look of the original Figma design.</td>
+<td></td>
+</tr>
+</table>
+
+More screens, and how the layout changed from one version to the next, are in `design/app/`.
 
 ## Databricks
 
